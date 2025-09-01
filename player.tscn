@@ -1,13 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdn4vigfnoi4r"]
+[gd_scene load_steps=10 format=3 uid="uid://cdn4vigfnoi4r"]
 
 [ext_resource type="Texture2D" uid="uid://doxw86cyj7r3t" path="res://assets/assets/player_ship.png" id="1_2sk2k"]
 [ext_resource type="Script" path="res://player.gd" id="1_j84xb"]
 [ext_resource type="PackedScene" uid="uid://c4sqgjnqyvqfd" path="res://bullet.tscn" id="2_1rh0n"]
+[ext_resource type="PackedScene" uid="uid://cupaifdbf2jyc" path="res://explosion.tscn" id="4_gykfu"]
+[ext_resource type="AudioStream" uid="uid://dcjghxrylpe47" path="res://assets/assets/sounds/laser.ogg" id="5_0hg1p"]
+[ext_resource type="AudioStream" uid="uid://brmkqtpp1up8m" path="res://assets/assets/sounds/engine.ogg" id="6_c6pl1"]
+[ext_resource type="Curve" uid="uid://doivjp8vop81r" path="res://exhaust.tres" id="7_oa122"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lpsqf"]
 radius = 31.0161
 
+[sub_resource type="Gradient" id="Gradient_0bhsd"]
+colors = PackedColorArray(1, 0.643137, 0.192157, 1, 1, 0, 0, 1)
+
 [node name="Player" type="RigidBody2D"]
+max_contacts_reported = 1
+contact_monitor = true
 linear_damp = 1.0
 angular_damp = 5.0
 script = ExtResource("1_j84xb")
@@ -28,4 +37,37 @@ position = Vector2(50, 0)
 one_shot = true
 autostart = true
 
+[node name="Explosion" parent="." instance=ExtResource("4_gykfu")]
+visible = false
+
+[node name="InvulnerabilityTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="LaserSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_0hg1p")
+bus = &"Effects"
+
+[node name="EngineSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_c6pl1")
+bus = &"Effects"
+
+[node name="Exhaust" type="CPUParticles2D" parent="."]
+show_behind_parent = true
+position = Vector2(-28, 0)
+rotation = 3.14159
+amount = 25
+lifetime = 0.1
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(1, 5)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 400.0
+scale_amount_max = 8.0
+scale_amount_curve = ExtResource("7_oa122")
+color_ramp = SubResource("Gradient_0bhsd")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="GunCooldown" to="." method="_on_gun_cooldown_timeout"]
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_invulnerability_timer_timeout"]

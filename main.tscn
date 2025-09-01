@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://l4i2jdvra5o6"]
+[gd_scene load_steps=11 format=3 uid="uid://l4i2jdvra5o6"]
 
 [ext_resource type="Texture2D" uid="uid://dnfigaddejdoa" path="res://assets/assets/space_background.png" id="1_b8r0h"]
 [ext_resource type="Script" path="res://main.gd" id="1_p202x"]
 [ext_resource type="PackedScene" uid="uid://cdn4vigfnoi4r" path="res://player.tscn" id="2_kl7aj"]
 [ext_resource type="PackedScene" uid="uid://lje73owbnx15" path="res://rock.tscn" id="2_pwv2t"]
+[ext_resource type="PackedScene" uid="uid://reabrlrke5uo" path="res://enemy.tscn" id="3_dyjut"]
+[ext_resource type="PackedScene" uid="uid://h3a3camjiagd" path="res://hud.tscn" id="5_al2us"]
+[ext_resource type="AudioStream" uid="uid://ddwf78s24pby" path="res://assets/assets/sounds/explosion.wav" id="7_ftxq5"]
+[ext_resource type="AudioStream" uid="uid://ctospegi4333d" path="res://assets/assets/sounds/levelup.ogg" id="8_7xj8o"]
+[ext_resource type="AudioStream" uid="uid://bv1b34udypwth" path="res://assets/assets/sounds/Funky-Gameplay_Looping.ogg" id="9_shyxa"]
 
 [sub_resource type="Curve2D" id="Curve2D_q6f3f"]
 _data = {
@@ -12,8 +17,10 @@ _data = {
 point_count = 5
 
 [node name="Main" type="Node"]
+process_mode = 3
 script = ExtResource("1_p202x")
 rock_scene = ExtResource("2_pwv2t")
+enemy_scene = ExtResource("3_dyjut")
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(284, 194)
@@ -26,3 +33,26 @@ region_rect = Rect2(888, 457, 228, 265)
 curve = SubResource("Curve2D_q6f3f")
 
 [node name="RockSpawn" type="PathFollow2D" parent="RockPath"]
+
+[node name="HUD" parent="." instance=ExtResource("5_al2us")]
+
+[node name="EnemyTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_ftxq5")
+bus = &"Effects"
+
+[node name="LevelupSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_7xj8o")
+bus = &"Effects"
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_shyxa")
+bus = &"Music"
+
+[connection signal="dead" from="Player" to="." method="game_over"]
+[connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
+[connection signal="shield_changed" from="Player" to="HUD" method="update_shield"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
