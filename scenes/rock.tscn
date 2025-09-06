@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfaxciudew5l8"]
+
+[ext_resource type="Texture2D" uid="uid://dcw17enu00vvw" path="res://assets/rock.png" id="1_if02x"]
+[ext_resource type="Script" path="res://scripts/rock.gd" id="1_ybj1l"]
+[ext_resource type="PackedScene" uid="uid://cel0mu40i1nub" path="res://scenes/explosion.tscn" id="3_npjiw"]
+
+[node name="Rock" type="RigidBody2D" groups=["rocks"]]
+max_contacts_reported = 1
+contact_monitor = true
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_ybj1l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_if02x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Explosion" parent="." instance=ExtResource("3_npjiw")]

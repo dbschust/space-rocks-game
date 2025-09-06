@@ -1,0 +1,46 @@
+extends RigidBody2D
+
+
+signal exploded
+
+
+var size
+var radius
+var scale_factor = 0.2
+
+
+func start(_size, _position, _velocity):
+	position = _position
+	size = _size
+	mass = size * 1.5
+	$Sprite2D.scale = Vector2.ONE * size * scale_factor
+	radius = int($Sprite2D.texture.get_size().x / 2 * $Sprite2D.scale.x)
+	var shape = CircleShape2D.new()
+	shape.radius = radius
+	$CollisionShape2D.shape = shape
+	
+	linear_velocity = _velocity
+	angular_velocity = randf_range(-PI, PI)
+	$Explosion.scale = Vector2.ONE * size * 0.75
+
+
+func _integrate_forces(physics_state):
+	var screensize = get_viewport_rect().size
+	var xform = physics_state.transform
+	xform.origin.x = wrapf(xform.origin.x, 0 - radius, screensize.x + radius)
+	xform.origin.y = wrapf(xform.origin.y, 0 - radius, screensize.y + radius)
+	physics_state.transform = xform
+
+
+func explode():
+	$CollisionShape2D.set_deferred("disabled", true)
+	$Explosion.show()
+	$Explosion/AnimationPlayer.play("explosion")
+	$Sprite2D.hide()
+	
+	exploded.emit(size, radius, position, linear_velocity)
+	linear_velocity = Vector2.ZERO
+	angular_velocity = 0
+	await $Explosion/AnimationPlayer.animation_finished
+	print("animation finished")
+	queue_free()

@@ -1,0 +1,160 @@
+[gd_scene load_steps=18 format=3 uid="uid://b4d4rflg5cr50"]
+
+[ext_resource type="Texture2D" uid="uid://ydtnkjuq12x" path="res://assets/space_background.png" id="1_3tvq5"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_u0850"]
+[ext_resource type="PackedScene" uid="uid://qyp7y4cxqj53" path="res://scenes/player.tscn" id="2_0fyjp"]
+[ext_resource type="PackedScene" uid="uid://b75bmdsfxpn81" path="res://scenes/enemy.tscn" id="3_6g4ct"]
+[ext_resource type="PackedScene" uid="uid://cfaxciudew5l8" path="res://scenes/rock.tscn" id="4_46n8w"]
+[ext_resource type="FontFile" uid="uid://bitsqoxyxqid4" path="res://assets/kenvector_future_thin.ttf" id="5_6v2e8"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="5_7cfo5"]
+[ext_resource type="Texture2D" uid="uid://b30yxkvxb61e5" path="res://assets/play_button.png" id="5_fnqqm"]
+[ext_resource type="Texture2D" uid="uid://3tu6v7nv2wva" path="res://assets/play_button_h.png" id="6_5lwkw"]
+[ext_resource type="Texture2D" uid="uid://gj1r1uqmdkx8" path="res://assets/player_small.png" id="6_bis0k"]
+[ext_resource type="Texture2D" uid="uid://v84v1np1euls" path="res://assets/shield_gold.png" id="8_yl32l"]
+[ext_resource type="Texture2D" uid="uid://mpaw4thdmvlt" path="res://assets/bar_glass_200.png" id="9_hvbi1"]
+[ext_resource type="Texture2D" uid="uid://dvdkjewba5s8k" path="res://assets/bar_green_200.png" id="10_r8q7y"]
+[ext_resource type="AudioStream" uid="uid://bdumy30ha2pn5" path="res://assets/sounds/levelup.ogg" id="10_reky2"]
+[ext_resource type="AudioStream" uid="uid://cyaymgin2npl6" path="res://assets/sounds/explosion.wav" id="11_bm3ei"]
+[ext_resource type="AudioStream" uid="uid://bf0reogmmymhs" path="res://assets/sounds/Funky-Gameplay_Looping.ogg" id="16_6shvf"]
+
+[sub_resource type="Curve2D" id="Curve2D_hh72o"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1152, 0, 0, 0, 0, 0, 1152, 648, 0, 0, 0, 0, 0, 648, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[node name="Main" type="Node"]
+script = ExtResource("1_u0850")
+rock_scene = ExtResource("4_46n8w")
+enemy_scene = ExtResource("3_6g4ct")
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_3tvq5")
+expand_mode = 3
+
+[node name="Player" parent="." instance=ExtResource("2_0fyjp")]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("5_7cfo5")
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 112.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ScoreLabel" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_fonts/font = ExtResource("5_6v2e8")
+theme_override_font_sizes/font_size = 64
+text = "0
+"
+
+[node name="ShieldIcon" type="TextureRect" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("8_yl32l")
+stretch_mode = 3
+
+[node name="ShieldBar" type="TextureProgressBar" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+texture_over = ExtResource("9_hvbi1")
+texture_progress = ExtResource("10_r8q7y")
+
+[node name="LivesCounter" type="Control" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="L1" type="TextureRect" parent="HUD/MarginContainer/HBoxContainer/LivesCounter"]
+layout_mode = 2
+offset_left = -174.0
+offset_right = -136.0
+offset_bottom = 72.0
+texture = ExtResource("6_bis0k")
+stretch_mode = 5
+
+[node name="L2" type="TextureRect" parent="HUD/MarginContainer/HBoxContainer/LivesCounter"]
+layout_mode = 2
+offset_left = -116.0
+offset_right = -78.0
+offset_bottom = 72.0
+texture = ExtResource("6_bis0k")
+stretch_mode = 5
+
+[node name="L3" type="TextureRect" parent="HUD/MarginContainer/HBoxContainer/LivesCounter"]
+layout_mode = 2
+offset_left = -58.0
+offset_right = -20.0
+offset_bottom = 72.0
+texture = ExtResource("6_bis0k")
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -46.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="Message" type="Label" parent="HUD/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_fonts/font = ExtResource("5_6v2e8")
+theme_override_font_sizes/font_size = 64
+text = "Space Rocks!"
+
+[node name="StartButton" type="TextureButton" parent="HUD/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("5_fnqqm")
+texture_hover = ExtResource("6_5lwkw")
+
+[node name="StartTimer" type="Timer" parent="HUD"]
+
+[node name="GameMusic" type="AudioStreamPlayer" parent="HUD"]
+stream = ExtResource("16_6shvf")
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve2D_hh72o")
+
+[node name="SpawnPath" type="PathFollow2D" parent="Path2D"]
+
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_reky2")
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_bm3ei")
+
+[connection signal="dead" from="Player" to="." method="game_over"]
+[connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
+[connection signal="shield_changed" from="Player" to="HUD" method="update_shield"]
+[connection signal="start_game" from="HUD" to="." method="start_game"]
+[connection signal="pressed" from="HUD/VBoxContainer/StartButton" to="HUD" method="_on_start_button_pressed"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
