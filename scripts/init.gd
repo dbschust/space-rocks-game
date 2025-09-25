@@ -1,7 +1,8 @@
 extends State
 
+
 @export var alive_state: State
-@export var start_delay := 0.5
+@export var start_delay := 0.1
 var timer := 0.0
 
 

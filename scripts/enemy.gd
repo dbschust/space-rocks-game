@@ -33,6 +33,8 @@ func shoot():
 	var b = bullet_scene.instantiate()
 	get_tree().root.add_child(b)
 	var dir = global_position.direction_to(target.global_position)
+	var spread = deg_to_rad(randf_range(-bullet_spread, bullet_spread))
+	dir = dir.rotated(spread)
 	b.start(global_position, dir)
 
 
@@ -48,6 +50,8 @@ func take_damage(amount):
 	health -= amount
 	if health <= 0:
 		explode()
+	else:
+		flash_on_hit()
 
 
 func explode():
@@ -72,3 +76,7 @@ func _on_body_entered(body):
 
 func _on_gun_cooldown_timeout():
 	shoot_burst(3)
+
+
+func flash_on_hit():
+	$AnimationPlayer.play("hitflash")

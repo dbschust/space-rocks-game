@@ -11,7 +11,7 @@ var level = 1
 var playing = false
 var score = 0
 
-## to-do items:  add modulate effect on hit for both the enemy and player
+## to-do items:  add high-score tracking
 
 
 func _process(delta):

@@ -70,6 +70,7 @@ func _on_body_entered(body):
 		body.explode()
 		var damage = 25 * body.size
 		set_shield(shield - damage)
+		flash_red()
 
 
 func set_shield(value):
@@ -84,7 +85,6 @@ func set_lives(value):
 	lives_changed.emit(lives)
 	if lives <= 0:
 		dead.emit()
-		#explode()
 		lives = 3
 
 
@@ -106,3 +106,8 @@ func play_exhaust_effects():
 func stop_exhaust_effects():
 	$ExhaustParticles.hide()
 	$ExhaustSound.stop()
+
+
+func flash_red():
+	$HitFlash.play("hitflash")
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://qyp7y4cxqj53"]
+[gd_scene load_steps=19 format=3 uid="uid://qyp7y4cxqj53"]
 
 [ext_resource type="Texture2D" uid="uid://c6wuirmkds3ko" path="res://assets/player_ship.png" id="1_7tvmr"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_cygec"]
@@ -26,6 +26,44 @@ colors = PackedColorArray(0.75339, 2.38247e-06, 5.77569e-07, 1, 0.673504, 0.6105
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48xj3"]
 radius = 29.0172
+
+[sub_resource type="Animation" id="Animation_f2w83"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_sjb5g"]
+resource_name = "hitflash"
+length = 0.2
+step = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4wu2r"]
+_data = {
+"RESET": SubResource("Animation_f2w83"),
+"hitflash": SubResource("Animation_sjb5g")
+}
 
 [node name="Player" type="RigidBody2D"]
 max_contacts_reported = 1
@@ -95,6 +133,11 @@ volume_db = -10.0
 
 [node name="ExhaustSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_hufo2")
+
+[node name="HitFlash" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4wu2r")
+}
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="StateMachine/Alive/GunDelay" to="StateMachine/Alive" method="_on_gun_delay_timeout"]

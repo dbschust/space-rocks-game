@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://b75bmdsfxpn81"]
+[gd_scene load_steps=16 format=3 uid="uid://b75bmdsfxpn81"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_2jpx2"]
 [ext_resource type="Texture2D" uid="uid://uu6d8anrpwy1" path="res://assets/enemy_saucer.png" id="1_skxs2"]
@@ -28,6 +28,44 @@ _data = {
 "points": PackedVector2Array(0, 0, 0, 0, -96, 567, -113.369, 118.981, 113.369, -118.981, 88, 281, -69.5926, 23.5717, 69.5926, -23.5717, 298, 128, -52.7557, -52.7557, 52.7557, 52.7557, 554, 153, 39.2862, -92.0419, -39.2862, 92.0419, 622, 397, 102.144, 2.24492, -102.144, -2.24492, 414, 583, 28.0616, 88.6745, -28.0616, -88.6745, 237, 495, -94.2868, 21.3268, 94.2868, -21.3268, 341, 312, -90.9194, -58.368, 90.9194, 58.368, 650, 356, -84.1847, -48.2659, 84.1847, 48.2659, 756, 512, -26.9391, 38.1637, 26.9391, -38.1637, 941, 435, -13.4695, 35.9188, 13.4695, -35.9188, 1016, 271, -46.0209, 48.2659, 46.0209, -48.2659, 1068, 163, -57.2456, 6.73477, 57.2456, -6.73477, 1220, 100, 0, 0, 0, 0, 1372, 97)
 }
 point_count = 15
+
+[sub_resource type="Animation" id="Animation_i17bb"]
+resource_name = "hitflash"
+length = 0.2
+step = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.006, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 1, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_lmxeu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b2kvv"]
+_data = {
+"RESET": SubResource("Animation_lmxeu"),
+"hitflash": SubResource("Animation_i17bb")
+}
 
 [node name="Enemy" type="Area2D" groups=["enemies"]]
 script = ExtResource("1_2jpx2")
@@ -62,7 +100,6 @@ curve = SubResource("Curve2D_u0qx0")
 [node name="Path2" type="Path2D" parent="Paths"]
 position = Vector2(1155, 688)
 rotation = -3.12694
-scale = Vector2(1, 1)
 curve = SubResource("Curve2D_u0qx0")
 
 [node name="Path3" type="Path2D" parent="Paths"]
@@ -92,6 +129,11 @@ volume_db = -10.0
 
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_tu8kh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_b2kvv")
+}
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="GunCooldown" to="." method="_on_gun_cooldown_timeout"]
